@@ -2,9 +2,9 @@
 
 
 .section ".text.boot"
-.global _start
+.global _kernel_main
 
-_start:
+_kernel_main:
 
 1: wfe // Wait for an event
    b 1b
