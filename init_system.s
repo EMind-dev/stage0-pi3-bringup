@@ -1,8 +1,10 @@
-
 .section .text.init
 .global init_system
 .global _bss_start  
 .global _bss_end
+
+// External function declarations
+.extern uart_init
 
 init_system:
     // Initialize the BSS section to zero
@@ -19,7 +21,11 @@ init_system:
     /* BSS section is now zeroed
      You can add more initialization code here if needed*/
 
+    // Initialize UART for early debugging/communication
+    bl uart_init
+
     // Jump to the main kernel function
     bl _kernel_main
 
     // Infinite loop to prevent falling through
+1:  b 1b
