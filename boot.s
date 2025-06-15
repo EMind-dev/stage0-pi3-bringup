@@ -2,7 +2,9 @@
 .global _start 
 _start:
     // Set up the stack pointer
-    movz sp, #0x8000, lsl #16   // Set stack pointer to top of RAM shifted left by 16 bits
+    mov x0, #0x8000
+    lsl x0, x0, #16             // Shift left by 16 bits (0x80000000)
+    mov sp, x0                  // Set stack pointer
 
     // Initialize the system
     bl init_system
