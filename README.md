@@ -18,7 +18,7 @@ This project implements a second- and third-stage bootloader for the Raspberry 
 - **BSS Section Clearing**: Zeroes out the BSS memory region during early bring‑up to ensure a deterministic runtime environment.
 - **Mini UART Driver**: Implements a minimalist assembly driver for the Pi 3’s Mini UART, providing routines for character, string, and hexadecimal-value transmission.
 - **Debug Messaging**: Outputs concise status and exception‑level information via UART to facilitate real‑time system inspection.
-- **C Interface**: Illustrates integration with MISRA‑compliant C code, demonstrating how to invoke UART services from higher‑level application modules.
+- **C Interface**:Shows how to integrate UART services within C code that follows MISRA best practices, providing an example of invocation from higher-level application modules.
 - **MMIO Access Macros**: Provides centralized macros (REG32, REG16, REG8) in raspi_defs.h to enable safe, documented memory-mapped register access in C and prevent manual pointer conversion errors.
 ## Project Architecture
 
