@@ -18,10 +18,7 @@
 .equ RASPI_AUX_ENABLES,      (RASPI_AUX_BASE + 0x04)  // Auxiliary Enables (bit0=MiniUART, bit1=SPI1, bit2=SPI2)
 
 /* ============================================================================
- * Mini UART Registers 
- * The Mini UART registers are mapped as 32-bit words, 
- * 4 bytes apart. Use REG32 to read/write.
- * Exception: Baud Rate Register is 16-bit.
+ * Mini UART Registers (8-bit unless noted)
  * ========================================================================== */
 .equ RASPI_AUX_MU_IO,        (RASPI_AUX_BASE + 0x40)  // I/O Data Register
 .equ RASPI_AUX_MU_IER,       (RASPI_AUX_BASE + 0x44)  // Interrupt Enable Register
@@ -36,13 +33,7 @@
 .equ RASPI_AUX_MU_BAUD,      (RASPI_AUX_BASE + 0x68)  // Baud Rate Register (16-bit)
 
 /* ============================================================================
- * SPI0 (AUX_SPI0) — Memory‐Mapped I/O
- *
- * - Control Register 0: 32‐bit wide, spaced every 4 bytes → use REG32
- * - Control Register 1:  8‐bit wide, offset +0x04     → use REG8
- * - Status Register:     32‐bit wide, offset +0x08     → use REG32
- * - I/O Register:        32‐bit wide, offset +0x10     → use REG32
- * - Peek Register:       16‐bit wide, offset +0x14     → use REG16
+ * SPI0 Registers
  * ========================================================================== */
 .equ RASPI_AUX_SPI0_CNTL0,   (RASPI_AUX_BASE + 0x80)  // SPI0 Control Register 0 (32-bit)
 .equ RASPI_AUX_SPI0_CNTL1,   (RASPI_AUX_BASE + 0x84)  // SPI0 Control Register 1 (8-bit)
@@ -51,13 +42,7 @@
 .equ RASPI_AUX_SPI0_PEEK,    (RASPI_AUX_BASE + 0x94)  // SPI0 Peek Register (16-bit)
 
 /* ============================================================================
- * SPI0 (AUX_SPI1) — Memory‐Mapped I/O
- *
- * - Control Register 0: 32‐bit wide, spaced every 4 bytes → use REG32
- * - Control Register 1:  8‐bit wide, offset +0x04     → use REG8
- * - Status Register:     32‐bit wide, offset +0x08     → use REG32
- * - I/O Register:        32‐bit wide, offset +0x10     → use REG32
- * - Peek Register:       16‐bit wide, offset +0x14     → use REG16
+ * SPI1 Registers
  * ========================================================================== */
 .equ RASPI_AUX_SPI1_CNTL0,   (RASPI_AUX_BASE + 0xC0)  // SPI1 Control Register 0 (32-bit)
 .equ RASPI_AUX_SPI1_CNTL1,   (RASPI_AUX_BASE + 0xC4)  // SPI1 Control Register 1 (8-bit)

@@ -5,7 +5,7 @@
  * Mini UART peripheral via the AUX block.
  * ========================================================================== */
 
-.include "include/raspi_defs.s"
+.include "startup/raspi_defs.s"
 
 .section .text
 .global uart_init
@@ -47,44 +47,52 @@ uart_init:
     mov x29, sp
 
     // Step 1: Enable Mini UART in AUX
-    ldr x0, =RASPI_AUX_ENABLES
-    mov w1, #MU_ENABLE_BIT
+    adrp x0, RASPI_AUX_ENABLES
+    add x0, x0, :lo12:RASPI_AUX_ENABLES
+    movz w1, #MU_ENABLE_BIT
     str w1, [x0]
 
     // Step 2: Disable UART during configuration
-    ldr x0, =RASPI_AUX_MU_CNTL
-    mov w1, #0
+    adrp x0, RASPI_AUX_MU_CNTL
+    add x0, x0, :lo12:RASPI_AUX_MU_CNTL
+    movz w1, #0
     str w1, [x0]
 
     // Step 3: Disable interrupts
-    ldr x0, =RASPI_AUX_MU_IER
-    mov w1, #0
+    adrp x0, RASPI_AUX_MU_IER
+    add x0, x0, :lo12:RASPI_AUX_MU_IER
+    movz w1, #0
     str w1, [x0]
 
     // Step 4: Clear and disable receive/transmit FIFOs
-    ldr x0, =RASPI_AUX_MU_IIR
-    mov w1, #0xC6              // Clear FIFOs (bits 7:6 = 11) + enable FIFOs (bits 2:1 = 11)
+    adrp x0, RASPI_AUX_MU_IIR
+    add x0, x0, :lo12:RASPI_AUX_MU_IIR
+    movz w1, #0xC6              // Clear FIFOs (bits 7:6 = 11) + enable FIFOs (bits 2:1 = 11)
     str w1, [x0]
 
     // Step 5: Set 8-bit mode (8N1)
-    ldr x0, =RASPI_AUX_MU_LCR
-    mov w1, #3                 // 8-bit data (bits 1:0 = 11)
+    adrp x0, RASPI_AUX_MU_LCR
+    add x0, x0, :lo12:RASPI_AUX_MU_LCR
+    movz w1, #3                 // 8-bit data (bits 1:0 = 11)
     str w1, [x0]
 
     // Step 6: Set RTS line to be always high
-    ldr x0, =RASPI_AUX_MU_MCR
-    mov w1, #0
+    adrp x0, RASPI_AUX_MU_MCR
+    add x0, x0, :lo12:RASPI_AUX_MU_MCR
+    movz w1, #0
     str w1, [x0]
 
     // Step 7: Set baud rate to 115200
     // Formula: baudrate_reg = (system_clock_freq / (8 * desired_baud)) - 1
     // For Pi 3: 250MHz / (8 * 115200) - 1 = 270.26... ≈ 270
-    ldr x0, =RASPI_AUX_MU_BAUD
-    mov w1, #270
+    adrp x0, RASPI_AUX_MU_BAUD
+    add x0, x0, :lo12:RASPI_AUX_MU_BAUD
+    movz w1, #270
     str w1, [x0]
 
     // Step 8: Configure GPIO pins 14 and 15 for UART (ALT5 function)
-    ldr x0, =GPFSEL1
+    adrp x0, GPFSEL1
+    add x0, x0, :lo12:GPFSEL1
     ldr w1, [x0]
     bic w1, w1, #(7 << 12)     // Clear GPIO14 function (bits 14:12)
     bic w1, w1, #(7 << 15)     // Clear GPIO15 function (bits 17:15)
@@ -93,33 +101,37 @@ uart_init:
     str w1, [x0]
 
     // Step 9: Disable pull-up/pull-down on GPIO pins 14,15
-    ldr x0, =GPPUD
-    mov w1, #0                 // Disable pull-up/down
+    adrp x0, GPPUD
+    add x0, x0, :lo12:GPPUD
+    movz w1, #0                 // Disable pull-up/down
     str w1, [x0]
 
     // Wait 150 cycles for control signal to settle
-    mov x2, #150
+    movz x2, #150
 1:  subs x2, x2, #1
     b.ne 1b
 
     // Clock the control signal into the GPIO pads
-    ldr x0, =GPPUDCLK0
-    mov w1, #(1 << 14) | (1 << 15)  // Clock GPIO14 and GPIO15
+    adrp x0, GPPUDCLK0
+    add x0, x0, :lo12:GPPUDCLK0
+    movz w1, #(1 << 14) | (1 << 15)  // Clock GPIO14 and GPIO15
     str w1, [x0]
 
     // Wait another 150 cycles
-    mov x2, #150
+    movz x2, #150
 2:  subs x2, x2, #1
     b.ne 2b
 
     // Remove the clock
-    ldr x0, =GPPUDCLK0
-    mov w1, #0
+    adrp x0, GPPUDCLK0
+    add x0, x0, :lo12:GPPUDCLK0
+    movz w1, #0
     str w1, [x0]
 
     // Step 10: Finally, enable the UART transmitter and receiver
-    ldr x0, =RASPI_AUX_MU_CNTL
-    mov w1, #(MU_TX_ENABLE | MU_RX_ENABLE)
+    adrp x0, RASPI_AUX_MU_CNTL
+    add x0, x0, :lo12:RASPI_AUX_MU_CNTL
+    movz w1, #(MU_TX_ENABLE | MU_RX_ENABLE)
     str w1, [x0]
 
     ldp x29, x30, [sp], #16
@@ -133,16 +145,20 @@ uart_init:
  * Modifies: x1, w2
  * ========================================================================== */
 uart_send_char:
-    // Wait for transmitter to be ready (TX FIFO not full)
-1:  ldr x1, =RASPI_AUX_MU_LSR
-    ldr w2, [x1]
-    and w2, w2, #MU_TX_EMPTY   // Check if transmitter is empty
-    cmp w2, #0
-    b.eq 1b                    // If not ready, keep waiting
+    // x0 = byte to send (only low 8 bits matter)
 
-    // Send the character
-    ldr x1, =RASPI_AUX_MU_IO
-    str w0, [x1]
+    // --- poll LSR bit 5 until TX FIFO has space ---
+    adrp    x1, RASPI_AUX_MU_LSR
+    add     x1, x1, :lo12:RASPI_AUX_MU_LSR
+1:  ldr     w2, [x1]
+    tst     w2, #0x20          // bit 5 set?
+    beq     1b
+
+    // --- write the character (32-bit store) ---
+    adrp    x1, RASPI_AUX_MU_IO
+    add     x1, x1, :lo12:RASPI_AUX_MU_IO
+    str     w0, [x1]
+
     ret
 
 /* ============================================================================
@@ -154,14 +170,16 @@ uart_send_char:
  * ========================================================================== */
 uart_recv_char:
     // Wait for data to be available (RX FIFO not empty)
-1:  ldr x1, =RASPI_AUX_MU_LSR
+1:  adrp x1, RASPI_AUX_MU_LSR
+    add x1, x1, :lo12:RASPI_AUX_MU_LSR
     ldr w2, [x1]
     and w2, w2, #MU_RX_READY   // Check if data is ready
     cmp w2, #0
     b.eq 1b                    // If no data, keep waiting
 
     // Read the character
-    ldr x1, =RASPI_AUX_MU_IO
+    adrp x1, RASPI_AUX_MU_IO
+    add x1, x1, :lo12:RASPI_AUX_MU_IO
     ldr w0, [x1]
     and w0, w0, #0xFF          // Ensure only 8 bits
     ret
@@ -174,7 +192,8 @@ uart_recv_char:
  * Modifies: x1, w2
  * ========================================================================== */
 uart_available:
-    ldr x1, =RASPI_AUX_MU_LSR
+    adrp x1, RASPI_AUX_MU_LSR
+    add x1, x1, :lo12:RASPI_AUX_MU_LSR
     ldr w2, [x1]
     and w0, w2, #MU_RX_READY   // Check if data is ready
     cmp w0, #0
@@ -218,12 +237,12 @@ uart_send_hex:
     mov x29, sp
     
     mov x19, x0                // Save the value
-    mov x20, #60               // Start with bit position 60 (15*4)
+    movz x20, #60              // Start with bit position 60 (15*4)
     
     // Send "0x" prefix
-    mov w0, #'0'
+    movz w0, #'0'
     bl uart_send_char
-    mov w0, #'x'
+    movz w0, #'x'
     bl uart_send_char
 
 1:  lsr x21, x19, x20          // Shift right by bit position

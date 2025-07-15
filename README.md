@@ -1,87 +1,60 @@
-# Raspberry Pi 3 Stage 0 Bootloader
+# stage0-pi3-bringup
 
-This project implements a second- and third-stage bootloader for the Raspberry Pi 3 (Broadcom BCM2837 SoC), developed as an EmbeddedMind showcase. It demonstrates advanced SoC bring‑up techniques and bare‑metal firmware development, with a focus on early ARMv8 core configuration, BSS section initialization, and Mini UART‑based debugging.
+## Project Overview
 
-## Table of Contents
-- [Key Features](#key-features)
-- [Project Architecture](#project-architecture)
-- [File Layout](#file-layout)
-- [Prerequisites](#prerequisites)
-- [Build Instructions](#build-instructions)
-- [Usage](#usage)
-- [Customization](#customization)
-- [License](#license)
+This repository contains a comprehensive implementation of System-on-Chip (SoC) bring-up, specifically targeting the BCM2837 of the Raspberry Pi 3. The project demonstrates how to perform SoC bring-up from scratch, implementing all necessary components for system initialization and peripheral management.
 
-## Key Features
+## Project Objectives
 
-- **ARMv8 Core Setup**: Establishes the initial stack pointer and transitions the CPU into the correct execution state (EL1) using AArch64 assembly.
-- **BSS Section Clearing**: Zeroes out the BSS memory region during early bring‑up to ensure a deterministic runtime environment.
-- **Mini UART Driver**: Implements a minimalist assembly driver for the Pi 3’s Mini UART, providing routines for character, string, and hexadecimal-value transmission.
-- **Debug Messaging**: Outputs concise status and exception‑level information via UART to facilitate real‑time system inspection.
-- **C Interface**:Shows how to integrate UART services within C code that follows MISRA best practices, providing an example of invocation from higher-level application modules.
-- **MMIO Access Macros**: Provides centralized macros (REG32, REG16, REG8) in raspi_defs.h to enable safe, documented memory-mapped register access in C and prevent manual pointer conversion errors.
-## Project Architecture
+The project aims to illustrate:
 
-1. **boot.s**: Defines the entry point (`_start`), sets up the stack pointer, and branches to the system initialization routine.
-2. **init_system.s**: Conducts early platform setup, including BSS clearing and UART initialization, before handing control to the kernel.
-3. **kernel.s**: Implements `_kernel_main`, which emits welcome messages, displays system parameters, and enters a perpetual idle loop.
-4. **uart/***: Contains:
-   - `raspi_defs.s`: SoC register definitions for AUX and GPIO modules.
-   - `uart.s`: Core Mini UART routines for TX/RX operations.
-   - `uart.h`: Public UART API declarations.
-   - `uart.c`: Demonstrates interactive echo mode, non‑printable character handling, and higher‑level UART utilities.
-5. **include/fw_types.h**: Defines essential data types (`u8_t`, `u32_t`, `bool_t`, etc.) in alignment with MISRA guidelines.
+- **SoC Bring-up Process**: Step-by-step implementation of the BCM2837 SoC initialization process
+- **MISRA C:2012 Best Practices**: All C modules strictly adhere to MISRA C:2012 guidelines to ensure code safety and reliability
+- **Low-Level Assembly Programming**: Assembly modules for boot and critical peripheral initialization
+- **ARM Cortex-A53 Architecture**: Exploitation of ARM Cortex-A53 core-specific features
 
-## File Layout
+## System Architecture
 
-```
-/boot.s
-/init_system.s
-/kernel.s
-/uart/
-    raspi_defs.s
-    uart.s
-    uart.h
-    uart.c
-/include/
-    fw_types.h
-```
+### Target Hardware
+- **SoC**: Broadcom BCM2837 (Raspberry Pi 3)
+- **CPU**: Quad-core ARM Cortex-A53 64-bit
+- **Architecture**: ARMv8-A
 
-## Prerequisites
+### Core Components
 
-- Raspberry Pi 3 (BCM2837 SoC)
-- ARMv8 bare‑metal toolchain (e.g., `aarch64-none-elf-gcc`)
-- GNU Make
+1. **Boot Sequence**: Implementation of the boot process from system reset
+2. **Peripheral Initialization**: Configuration and setup of primary peripherals
+3. **Memory Management**: MMU setup and memory space management
+4. **Interrupt Handling**: Interrupt management system
 
-## Build Instructions
+## Code Structure
 
-```sh
-# Clone the repository
-git clone https://github.com/your-username/pi3-stage0-bootloader.git
-cd pi3-stage0-bootloader
+- **Assembly Modules**: Boot sequence handling and low-level hardware initialization
+- **MISRA-compliant C Modules**: System functionality implementation following MISRA C:2012
+- **Header Files**: Hardware register definitions and data structures
+- **Linker Scripts**: Memory configuration and code layout
 
-# Build the kernel image
-make all
+## Technical Features
 
-# Deploy the kernel to SD card
-cp kernel8.img /media/pi/boot/
-```
+### MISRA C:2012 Compliance
+- Adherence to mandatory and advisory rules
+- Safe and maintainable code
+- Comprehensive documentation of deviations (if present)
+
+### Assembly Implementation
+- Custom boot vector
+- Stack pointer initialization
+- System register configuration
+- Critical peripheral setup
 
 ## Usage
 
-1. Insert the SD card into the Raspberry Pi 3 and power on.
-2. Connect a TTL serial adapter to the GPIO UART pins (115200 baud).
-3. Observe the bootloader’s debug output in your serial terminal.
+This project serves as an educational reference and template for:
+- Embedded developers working with ARM SoCs
+- Engineers interested in bare-metal system bring-up
+- Students of embedded systems and ARM architectures
+- Professionals requiring MISRA C:2012 compliant code
 
-## TODO
+## Development Notes
 
-- **Peripheral Support**: Extend `init_system.s` with additional peripheral driver implementations.
-- **Advanced Stages**: Integrate file‑system loaders or more sophisticated kernel payloads.
-
-## License
-
-This project is distributed under the MIT License. See the `LICENSE` file for details.
-
----
-
-*EmbeddedMind Showcase – elegant and precise SoC bring‑up demonstrations.*
+The project is structured to be easily comprehensible and modifiable, with particular emphasis on code documentation and explanation of fundamental SoC bring-up concepts.
