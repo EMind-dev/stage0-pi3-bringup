@@ -23,10 +23,10 @@ void uart_send(void)
 
     /* Constants defined to avoid magic numbers */
     const u16_t hex_value = 0xCAFEU;
-    const u8_t carriage_return = (u8_t)'\r';
-    const u8_t newline = (u8_t)'\n';
-    const u8_t quit_lower = (u8_t)'q';
-    const u8_t quit_upper = (u8_t)'Q';
+    //const u8_t carriage_return = (u8_t)'\r';
+    // const u8_t newline = (u8_t)'\n';
+    // const u8_t quit_lower = (u8_t)'q';
+    // const u8_t quit_upper = (u8_t)'Q';
 
     uart_send_string((const u8_t*)"Hello from C code!\r\n");
     

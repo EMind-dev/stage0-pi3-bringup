@@ -1,6 +1,6 @@
 #include "../include/uart_LL.h"
 
-void main()
+int main()
 {
     // set up serial console
     uart_send();
@@ -8,4 +8,5 @@ void main()
     {
         
     }
+    return 0;
 }
