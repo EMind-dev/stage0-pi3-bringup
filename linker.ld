@@ -12,6 +12,12 @@ SECTIONS {
     *(.rodata .rodata.* .gnu.linkonce.r*) 
     }
 
+.data : {
+  . = ALIGN(8);
+  __data_start = .;
+  *(.data .data.*)
+  __data_end = .;
+}
 
   .bss (NOLOAD) : {
     . = ALIGN(16);
@@ -20,7 +26,8 @@ SECTIONS {
     *(COMMON)
     __bss_end = .;
   }
-  
+  __bss_size = __bss_end - __bss_start;
+
   . = ALIGN(16);
   _stack_top = . + 0x1000;
   
@@ -28,5 +35,3 @@ SECTIONS {
    /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
 
 }
-
-__bss_size = (__bss_end - __bss_start) >> 3;

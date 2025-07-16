@@ -14,13 +14,14 @@ init_system:
     // We avoid the use of pseudo-instructions like ldr x1,=_stack_top
     adrp x1, __bss_start
     add x1, x1, :lo12:__bss_start
-    adrp x2, __bss_end
-    add x2, x2, :lo12:__bss_end
-    sub x3, x2, x1  // Calculate size of BSS section
+    adrp x2, __bss_size
+    add x2, x2, :lo12:__bss_size
 
+// This way we ensure that the BSS section is zeroed out
+// we avoid using pseudo-instructions and its faster then use cbz/cbnz
 _clear_bss:
- 1: subs x3, x3, #4
-    str wzr, [x1], #4
+ 1: subs x2, x2, #8 // When x2 is zero, we stop the instruction set z flag and b.hi branch is ignored
+    str xzr, [x1], #8
     b.hi 1b
 
 _bss_done:
