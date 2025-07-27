@@ -33,19 +33,34 @@
 .equ RASPI_AUX_MU_BAUD,      (RASPI_AUX_BASE + 0x68)  // Baud Rate Register (16-bit)
 
 /* ============================================================================
- * SPI0 Registers
- * ========================================================================== */
-.equ RASPI_AUX_SPI0_CNTL0,   (RASPI_AUX_BASE + 0x80)  // SPI0 Control Register 0 (32-bit)
-.equ RASPI_AUX_SPI0_CNTL1,   (RASPI_AUX_BASE + 0x84)  // SPI0 Control Register 1 (8-bit)
-.equ RASPI_AUX_SPI0_STAT,    (RASPI_AUX_BASE + 0x88)  // SPI0 Status Register (32-bit)
-.equ RASPI_AUX_SPI0_IO,      (RASPI_AUX_BASE + 0x90)  // SPI0 I/O Register (32-bit)
-.equ RASPI_AUX_SPI0_PEEK,    (RASPI_AUX_BASE + 0x94)  // SPI0 Peek Register (16-bit)
-
-/* ============================================================================
  * SPI1 Registers
  * ========================================================================== */
-.equ RASPI_AUX_SPI1_CNTL0,   (RASPI_AUX_BASE + 0xC0)  // SPI1 Control Register 0 (32-bit)
-.equ RASPI_AUX_SPI1_CNTL1,   (RASPI_AUX_BASE + 0xC4)  // SPI1 Control Register 1 (8-bit)
-.equ RASPI_AUX_SPI1_STAT,    (RASPI_AUX_BASE + 0xC8)  // SPI1 Status Register (32-bit)
-.equ RASPI_AUX_SPI1_IO,      (RASPI_AUX_BASE + 0xD0)  // SPI1 I/O Register (32-bit)
-.equ RASPI_AUX_SPI1_PEEK,    (RASPI_AUX_BASE + 0xD4)  // SPI1 Peek Register (16-bit)
+.equ RASPI_AUX_SPI1_CNTL0,   (RASPI_AUX_BASE + 0x80)  // SPI1 (datasheet AUX_SPI0) Control Register 0 (32-bit)
+.equ RASPI_AUX_SPI1_CNTL1,   (RASPI_AUX_BASE + 0x84)  // SPI1 (datasheet AUX_SPI0) Control Register 1 (8-bit)
+.equ RASPI_AUX_SPI1_STAT,    (RASPI_AUX_BASE + 0x88)  // SPI1 (datasheet AUX_SPI0) Status Register (32-bit)
+.equ RASPI_AUX_SPI1_IO,      (RASPI_AUX_BASE + 0x90)  // SPI1 (datasheet AUX_SPI0) I/O Register (32-bit)
+.equ RASPI_AUX_SPI1_PEEK,    (RASPI_AUX_BASE + 0x94)  // SPI1 (datasheet AUX_SPI0) Peek Register (16-bit)
+
+/* ============================================================================
+ * SPI2 Registers
+ * ========================================================================== */
+.equ RASPI_AUX_SPI2_CNTL0,   (RASPI_AUX_BASE + 0xC0)  // SPI2 (datasheet: AUX_SPI1) Control Register 0 (32-bit)
+.equ RASPI_AUX_SPI2_CNTL1,   (RASPI_AUX_BASE + 0xC4)  // SPI2 (datasheet: AUX_SPI1) Control Register 1 (8-bit)
+.equ RASPI_AUX_SPI2_STAT,    (RASPI_AUX_BASE + 0xC8)  // SPI2 (datasheet: AUX_SPI1) Status Register (32-bit)
+.equ RASPI_AUX_SPI2_IO,      (RASPI_AUX_BASE + 0xD0)  // SPI2 (datasheet: AUX_SPI1) I/O Register (32-bit)
+.equ RASPI_AUX_SPI2_PEEK,    (RASPI_AUX_BASE + 0xD4)  // SPI2 (datasheet: AUX_SPI1) Peek Register (16-bit)
+
+/* ============================================================================
+ * PL011 UART Registers
+ * ========================================================================== */
+.equ RASPI_PL011_UART_BASE,   (PERIPHERAL_BASE + 0x201000)
+.equ RASPI_PL011_UART_DR,     (RASPI_PL011_UART_BASE + 0x00)  // Data Register
+.equ RASPI_PL011_UART_FR,     (RASPI_PL011_UART_BASE + 0x18)  // Flag Register
+.equ RASPI_PL011_UART_IBRD,   (RASPI_PL011_UART_BASE + 0x24)  // Integer Baud Rate Divisor
+.equ RASPI_PL011_UART_FBRD,   (RASPI_PL011_UART_BASE + 0x28)  // Fractional Baud Rate Divisor
+.equ RASPI_PL011_UART_LCRH,   (RASPI_PL011_UART_BASE + 0x2C)  // Line Control Register
+.equ RASPI_PL011_UART_CR,     (RASPI_PL011_UART_BASE + 0x30)  // Control Register
+.equ RASPI_PL011_UART_IFLS,   (RASPI_PL011_UART_BASE + 0x34)  // Interrupt FIFO Level Select Register
+.equ RASPI_PL011_UART_IMSC,   (RASPI_PL011_UART_BASE + 0x38)  // Interrupt Mask Set/Clear Register
+.equ RASPI_PL011_UART_MIS,    (RASPI_PL011_UART_BASE + 0x40)  // Masked Interrupt Status Register
+.equ RASPI_PL011_UART_ICR,    (RASPI_PL011_UART_BASE + 0x44)  // Interrupt Clear Register

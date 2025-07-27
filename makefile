@@ -56,11 +56,11 @@ debug: $(TARGET)
 # Assumes SD card is mounted at /Volumes/boot - adjust as needed
 flash: $(TARGET)
 	@echo "Copying $(TARGET) to SD card..."
-	@if [ -d "/Volumes/boot" ]; then \
-		cp $(TARGET) /Volumes/boot/ && \
+	@if [ -d "/Volumes/bootfs" ]; then \
+		cp $(TARGET) /Volumes/bootfs/ && \
 		echo "Kernel copied to SD card successfully!"; \
 	else \
-		echo "Error: /Volumes/boot not found. Is the SD card mounted?"; \
+		echo "Error: /Volumes/bootfs not found. Is the SD card mounted?"; \
 		exit 1; \
 	fi
 

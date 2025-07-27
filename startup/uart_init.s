@@ -44,7 +44,8 @@
  * ========================================================================== */
 uart_init:
     stp x29, x30, [sp, #-16]!  // Save frame pointer and link register
-    mov x29, sp
+    movz x29, #0              // Initialize frame pointer
+    add x29, sp, #0      // Set frame pointer to current stack pointer
 
     // Step 1: Enable Mini UART in AUX
     adrp x0, RASPI_AUX_ENABLES
@@ -88,7 +89,7 @@ uart_init:
     adrp x0, RASPI_AUX_MU_BAUD
     add x0, x0, :lo12:RASPI_AUX_MU_BAUD
     movz w1, #270
-    str w1, [x0]
+    strh w1, [x0]
 
     // Step 8: Configure GPIO pins 14 and 15 for UART (ALT5 function)
     adrp x0, GPFSEL1
@@ -106,8 +107,8 @@ uart_init:
     movz w1, #0                 // Disable pull-up/down
     str w1, [x0]
 
-    // Wait 150 cycles for control signal to settle
-    movz x2, #150
+    // Wait 200 cycles for control signal to settle
+    movz x2, #200
 1:  subs x2, x2, #1
     b.ne 1b
 
@@ -117,8 +118,8 @@ uart_init:
     movz w1, #(1 << 14) | (1 << 15)  // Clock GPIO14 and GPIO15
     str w1, [x0]
 
-    // Wait another 150 cycles
-    movz x2, #150
+    // Wait another 200 cycles
+    movz x2, #200
 2:  subs x2, x2, #1
     b.ne 2b
 
